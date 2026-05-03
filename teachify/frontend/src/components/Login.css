@@ -1,0 +1,32 @@
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    background: #f3f3f3;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .login-container input {
+    width: 90%;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid gray;
+  }
+  
+  .login-container button {
+    padding: 8px 15px;
+    background-color: #f0a500;
+    border: none;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .form-link {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
