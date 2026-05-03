@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<style>
+    .olms-course-form-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-course-form-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .olms-course-form-header {
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        color: #f9fafb;
+        padding: 18px 20px;
+        position: relative;
+    }
+
+    .olms-course-form-header::after {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 250, 252, 0.4);
+        right: -35px;
+        top: -55px;
+        opacity: 0.8;
+    }
+
+    .olms-course-form-header h5 {
+        margin-bottom: 2px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .olms-course-form-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+
+    .olms-course-form-body {
+        padding: 20px 22px 22px;
+        background: linear-gradient(180deg, #f9fafb, #eef2ff);
+    }
+
+    .olms-course-form-label {
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: #4b5563;
+        margin-bottom: 4px;
+    }
+
+    .olms-course-form-body input[type="text"],
+    .olms-course-form-body input[type="number"],
+    .olms-course-form-body select,
+    .olms-course-form-body textarea {
+        border-radius: 10px;
+        border-color: #d1d5db;
+        font-size: 0.9rem;
+        padding: 9px 11px;
+        background-color: rgba(255, 255, 255, 0.98);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .olms-course-form-body input:focus,
+    .olms-course-form-body select:focus,
+    .olms-course-form-body textarea:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.23);
+        background-color: #ffffff;
+        outline: none;
+    }
+
+    .olms-course-form-error {
+        font-size: 0.8rem;
+        color: #b91c1c;
+    }
+
+    .olms-course-save-btn {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        padding: 9px 12px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .olms-course-save-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+    }
+
+    @media (max-width: 576px) {
+        .olms-course-form-body {
+            padding: 18px 16px 18px;
+        }
+    }
+</style>
+
+<div class="olms-course-form-wrapper">
+    <div class="col-md-6 col-sm-10">
+        <div class="card olms-course-form-card">
+            <div class="olms-course-form-header">
+                <h5>{{ title }}</h5>
+                <div class="olms-course-form-subtitle">
+                    Define course details to make it easy for students to discover and enroll.
+                </div>
+            </div>
+            <div class="olms-course-form-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="olms-course-form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="olms-course-form-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn olms-course-save-btn w-100">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

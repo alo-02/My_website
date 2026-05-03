@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<style>
+    .olms-enroll-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 12px;
+    }
+
+    .olms-enroll-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .olms-enroll-subtitle {
+        font-size: 0.88rem;
+        color: #6b7280;
+    }
+
+    .olms-enroll-card {
+        border-radius: 16px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+        background: linear-gradient(180deg, #eef2ff, #f9fafb);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .olms-enroll-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 44px rgba(15, 23, 42, 0.24);
+    }
+
+    .olms-enroll-body {
+        padding: 14px 16px 16px;
+    }
+
+    .olms-enroll-course-title {
+        font-size: 1.02rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .olms-enroll-meta {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .olms-enroll-status-label {
+        font-size: 0.86rem;
+        margin-bottom: 4px;
+    }
+
+    .olms-enroll-status-badge {
+        font-size: 0.78rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
+
+    .olms-enroll-btn {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 7px 12px;
+    }
+
+    .olms-enroll-empty {
+        font-size: 0.96rem;
+        color: #6b7280;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="olms-enroll-header">
+    <div>
+        <div class="olms-enroll-title">My Enrolled Courses</div>
+        <div class="olms-enroll-subtitle">
+            Access the courses you have enrolled in and continue learning.
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for enr in enrollments %}
+    <div class="col-md-4 mb-3">
+        <div class="olms-enroll-card h-100">
+            <div class="olms-enroll-body d-flex flex-column">
+                <h5 class="olms-enroll-course-title">{{ enr.course.title }}</h5>
+                <p class="olms-enroll-meta">
+                    {{ enr.course.category }} • Instructor: {{ enr.course.teacher.username }}
+                </p>
+                <p class="olms-enroll-status-label mb-1">
+                    Status:
+                    <span class="badge olms-enroll-status-badge
+                        {% if enr.status == 'paid' %}bg-success{% elif enr.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                        {{ enr.get_status_display }}
+                    </span>
+                </p>
+                <a href="{% url 'courses:course_detail' enr.course.pk %}"
+                   class="btn btn-outline-primary btn-sm mt-auto olms-enroll-btn align-self-start">
+                    Go to Course
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="olms-enroll-empty">You have not enrolled in any course yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

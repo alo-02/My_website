@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Invoice{% endblock %}
+
+{% block content %}
+<style>
+    .olms-invoice-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-invoice-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .olms-invoice-header {
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        color: #f9fafb;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+    }
+
+    .olms-invoice-header::after {
+        content: "";
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 250, 252, 0.4);
+        right: -30px;
+        top: -50px;
+        opacity: 0.8;
+    }
+
+    .olms-invoice-title {
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+
+    .olms-invoice-number {
+        font-size: 0.86rem;
+        font-weight: 500;
+    }
+
+    .olms-invoice-body {
+        padding: 20px 22px 22px;
+        background: linear-gradient(180deg, #f9fafb, #eef2ff);
+    }
+
+    .olms-invoice-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px dashed #e5e7eb;
+        font-size: 0.92rem;
+    }
+
+    .olms-invoice-row:last-child {
+        border-bottom: none;
+    }
+
+    .olms-invoice-label {
+        font-weight: 500;
+        color: #4b5563;
+    }
+
+    .olms-invoice-value {
+        color: #111827;
+        text-align: right;
+    }
+
+    .olms-invoice-status {
+        font-size: 0.86rem;
+    }
+
+    .olms-invoice-footer {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .olms-invoice-back-btn {
+        border-radius: 999px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 14px;
+        margin-top: 14px;
+    }
+</style>
+
+<div class="olms-invoice-wrapper">
+    <div class="col-md-8 col-sm-11">
+        <div class="card olms-invoice-card">
+            <div class="olms-invoice-header">
+                <span class="olms-invoice-title">Invoice</span>
+                {% if invoice %}
+                    <span class="olms-invoice-number">#{{ invoice.invoice_number }}</span>
+                {% endif %}
+            </div>
+            <div class="olms-invoice-body">
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Course</span>
+                    <span class="olms-invoice-value">{{ payment.enrollment.course.title }}</span>
+                </div>
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Student</span>
+                    <span class="olms-invoice-value">{{ payment.enrollment.student.username }}</span>
+                </div>
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Amount</span>
+                    <span class="olms-invoice-value">{{ payment.amount }} BDT</span>
+                </div>
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Method</span>
+                    <span class="olms-invoice-value">{{ payment.get_method_display }}</span>
+                </div>
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Transaction ID</span>
+                    <span class="olms-invoice-value">{{ payment.transaction_id }}</span>
+                </div>
+                <div class="olms-invoice-row">
+                    <span class="olms-invoice-label">Status</span>
+                    <span class="olms-invoice-value olms-invoice-status">
+                        {% if payment.is_successful %}
+                            <span class="badge bg-success">Paid</span>
+                        {% else %}
+                            <span class="badge bg-danger">Failed</span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% if invoice %}
+                    <div class="olms-invoice-row">
+                        <span class="olms-invoice-label">Generated at</span>
+                        <span class="olms-invoice-value">
+                            {{ invoice.generated_at|date:"Y-m-d H:i" }}
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="olms-invoice-footer">
+                    Keep this invoice for your records. You can always return here from your enrolled
+                    courses section.
+                </div>
+
+                <a href="{% url 'payments:my_enrollments' %}"
+                   class="btn btn-primary olms-invoice-back-btn">
+                    Back to My Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

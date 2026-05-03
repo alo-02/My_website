@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .olms-dashboard-hero {
+        background: radial-gradient(circle at top left, #4f46e5, #0ea5e9);
+        border-radius: 18px;
+        padding: 28px 30px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.25);
+    }
+
+    .olms-dashboard-hero::before {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(248, 250, 252, 0.08);
+        top: -80px;
+        right: -40px;
+        filter: blur(1px);
+    }
+
+    .olms-dashboard-hero::after {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 1px solid rgba(248, 250, 252, 0.25);
+        bottom: -40px;
+        left: -40px;
+    }
+
+    .olms-dashboard-title {
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        opacity: 0.8;
+    }
+
+    .olms-dashboard-name {
+        font-size: 1.6rem;
+        font-weight: 600;
+    }
+
+    .olms-role-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        background: rgba(15, 23, 42, 0.16);
+        backdrop-filter: blur(6px);
+    }
+
+    .olms-role-pill span.badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+    }
+
+    .olms-dashboard-grid {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+
+    .olms-dashboard-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7eb;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .olms-dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 32px rgba(15, 23, 42, 0.14);
+        border-color: #6366f1;
+    }
+
+    .olms-dashboard-card h5 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .olms-dashboard-card p {
+        margin-bottom: 0;
+        font-size: 0.88rem;
+        color: #6b7280;
+    }
+
+    .olms-badge-role-teacher {
+        background: rgba(59, 130, 246, 0.12);
+        color: #1d4ed8;
+    }
+
+    .olms-badge-role-student {
+        background: rgba(16, 185, 129, 0.12);
+        color: #047857;
+    }
+
+    .olms-badge-role-admin {
+        background: rgba(244, 63, 94, 0.12);
+        color: #be123c;
+    }
+
+    .olms-divider-label {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.68rem;
+        color: #9ca3af;
+        margin-top: 24px;
+        margin-bottom: 8px;
+    }
+
+    @media (max-width: 576px) {
+        .olms-dashboard-hero {
+            padding: 22px 18px;
+        }
+
+        .olms-dashboard-name {
+            font-size: 1.3rem;
+        }
+
+        .olms-dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    .course-card { transition: all 0.2s; }
+    .course-card:hover { transform: scale(1.02); }
+    .unread-badge { position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; }
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="olms-dashboard-hero mb-4">
+            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div>
+                    <div class="olms-dashboard-title mb-2">
+                        Online Learning Management System
+                    </div>
+                    <div class="olms-dashboard-name mb-1">
+                        Hello, {{ user.username }}
+                    </div>
+                    <div class="olms-role-pill mt-1">
+                        <span class="badge-dot"></span>
+                        <span>
+                            {{ user.get_role_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-3 mt-md-0 text-md-end">
+                    {% if user.is_teacher %}
+                        <span class="badge olms-badge-role-teacher mb-1">Teacher Panel</span>
+                        <div class="small opacity-75">
+                            You have {{ courses|length }} course{{ courses|length|pluralize }}.
+                        </div>
+                    {% elif user.is_student %}
+                        <span class="badge olms-badge-role-student mb-1">Student Panel</span>
+                        <div class="small opacity-75">
+                            You are enrolled in {{ enrollments|length }} course{{ enrollments|length|pluralize }}.
+                        </div>
+                    {% elif user.is_superuser or user.is_admin %}
+                        <span class="badge olms-badge-role-admin mb-1">Admin Panel</span>
+                        <div class="small opacity-75">
+                            Monitor users, courses, payments and reports.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="olms-divider-label">Quick overview</div>
+<div class="olms-dashboard-grid">
+    {% if user.is_teacher %}
+        <div class="olms-dashboard-card">
+           <h5>Your courses</h5>
+            <p>Below is your course list pulled from the database.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'courses:teacher_course_list' %}">
+             Manage Courses
+            </a>
+            <a class="btn btn-primary btn-sm mt-2 ms-2" href="{% url 'courses:course_create' %}">
+             Create Course
+            </a>
+        </div>
+
+        <div class="olms-dashboard-card">
+            <h5>Materials & content</h5>
+            <p>Upload PDFs and videos from each course page.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'courses:teacher_course_list' %}">
+             Open Course List
+            </a>
+        </div>
+
+        <div class="olms-dashboard-card">
+            <h5>Student messages</h5>
+            <p>Open Inbox to reply to students.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'messaging:inbox' %}">
+             Open Inbox
+            </a>
+        </div>
+    {% elif user.is_student %}
+        <div class="olms-dashboard-card">
+            <h5>Enrolled courses</h5>
+            <p>Your paid enrollments appear below.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'payments:my_enrollments' %}">My Courses</a>
+       </div>
+
+       <div class="olms-dashboard-card">
+            <h5>New courses</h5>
+            <p>Browse available courses and enroll securely.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'courses:course_list' %}">Browse Courses</a>
+       </div>
+
+       <div class="olms-dashboard-card">
+            <h5>Ask your teacher</h5>
+            <p>Use Inbox to chat with your course teacher.</p>
+            <a class="btn btn-outline-primary btn-sm mt-2" href="{% url 'messaging:inbox' %}">Open Inbox</a>
+       </div>
+    {% elif user.is_superuser or user.is_admin %}
+        <div class="olms-dashboard-card">
+            <h5>User management</h5>
+            <p>Use the Django admin panel to manage users.</p>
+        </div>
+        <div class="olms-dashboard-card">
+            <h5>Courses & content</h5>
+            <p>Review all courses and uploaded materials.</p>
+        </div>
+        <div class="olms-dashboard-card">
+            <h5>Reports & payments</h5>
+            <p>Use payments pages/admin for enrollments and invoices.</p>
+        </div>
+    {% endif %}
+</div>
+
+{# ========================= #}
+{# Teacher: show their courses #}
+{# ========================= #}
+{% if user.is_teacher %}
+    <div class="olms-section-title">Your courses</div>
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ course.title }}</h5>
+                        <div class="text-muted small mb-2">{{ course.category }}</div>
+                        <p class="card-text">{{ course.description|truncatewords:18 }}</p>
+
+                        {# These URL names must match your courses app urls.py #}
+                        <a class="btn btn-primary btn-sm"
+                           href="{% url 'courses:course_detail' course.pk %}">
+                            Open
+                        </a>
+
+                        <a class="btn btn-outline-secondary btn-sm"
+                           href="{% url 'messaging:inbox' %}">
+                            Inbox
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info mb-0">
+                    No courses found. Create one from the Courses section.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{# ============================ #}
+{# Student: show enrolled courses #}
+{# ============================ #}
+{% if user.is_student %}
+    <div class="olms-section-title">Enrolled courses</div>
+    <div class="row">
+        {% for enrollment in enrollments %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ enrollment.course.title }}</h5>
+                        <div class="text-muted small mb-2">
+                            Teacher: {{ enrollment.course.teacher.username }}
+                        </div>
+                        <p class="card-text">{{ enrollment.course.description|truncatewords:18 }}</p>
+
+                        <a class="btn btn-primary btn-sm"
+                           href="{% url 'courses:course_detail' enrollment.course.pk %}">
+                            Open
+                        </a>
+
+                        <a class="btn btn-outline-primary btn-sm"
+                           href="{% url 'messaging:inbox' %}">
+                            Message (Inbox)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning mb-0">
+                    No enrolled courses found. Complete a payment/enrollment first.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if available_courses %}
+        <div class="olms-section-title">Suggested courses</div>
+        <div class="row">
+            {% for course in available_courses %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">{{ course.title }}</h5>
+                            <div class="text-muted small mb-2">{{ course.category }}</div>
+                            <p class="card-text">{{ course.description|truncatewords:18 }}</p>
+                            <a class="btn btn-outline-primary btn-sm"
+                               href="{% url 'courses:course_detail' course.pk %}">
+                                View
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
+
+{# ===================== #}
+{# Common quick links     #}
+{# ===================== #}
+<div class="mt-3">
+    <a class="btn btn-outline-primary btn-sm" href="{% url 'courses:course_list' %}">Browse courses</a>
+    <a class="btn btn-secondary btn-sm ms-2" href="{% url 'messaging:inbox' %}">Inbox</a>
+    {% if user.is_student %}
+        <a class="btn btn-outline-success btn-sm ms-2" href="{% url 'payments:my_enrollments' %}">My Courses (Payments)</a>
+    {% endif %}
+</div>
+
+{% endblock %}

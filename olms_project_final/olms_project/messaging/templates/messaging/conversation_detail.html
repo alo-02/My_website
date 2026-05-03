@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Conversation{% endblock %}
+
+{% block content %}
+<style>
+    .olms-chat-header { margin-bottom: 12px; }
+    .olms-chat-title { font-size: 1.2rem; font-weight: 600; }
+    .olms-chat-subtitle { font-size: 0.85rem; color: #6b7280; }
+    .olms-chat-window { max-height: 420px; overflow-y: auto; border-radius: 18px; border: none; box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18); background: linear-gradient(180deg, #eef2ff, #f9fafb); }
+    .olms-chat-body { padding: 14px 16px 16px; }
+    .olms-chat-message-wrapper { margin-bottom: 8px; }
+    .olms-chat-meta { font-size: 0.75rem; color: #9ca3af; margin-bottom: 2px; }
+    .olms-chat-bubble { display: inline-block; padding: 8px 11px; border-radius: 14px; font-size: 0.9rem; max-width: 75%; word-wrap: break-word; box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15); }
+    .olms-chat-bubble-me { background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: #f9fafb; margin-left: auto; text-align: left; }
+    .olms-chat-bubble-other { background: #ffffff; color: #111827; }
+    .olms-chat-input-card { border-radius: 16px; border: none; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16); margin-top: 8px; }
+    .olms-chat-input-body { padding: 12px 14px 14px; }
+    .olms-chat-textarea textarea { border-radius: 12px; border-color: #d1d5db; resize: vertical; min-height: 70px; max-height: 180px; font-size: 0.9rem; padding: 8px 10px; background-color: #f9fafb; transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease; }
+    .olms-chat-textarea textarea:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); background-color: #ffffff; outline: none; }
+    .olms-chat-send-btn { border-radius: 999px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 7px 14px; }
+    .olms-chat-back-btn { border-radius: 999px; font-size: 0.78rem; padding: 7px 14px; }
+</style>
+
+<div class="olms-chat-header">
+    <div class="olms-chat-title">{{ course.title }} – Chat with {{ other_user.username }}</div>
+    <div class="olms-chat-subtitle">Use this space for course-related questions and clarifications.</div>
+</div>
+
+<div class="card olms-chat-window mb-3">
+    <div class="olms-chat-body">
+        {% for msg in messages %}
+            <div class="olms-chat-message-wrapper {% if msg.sender == user %}text-end{% else %}text-start{% endif %}">
+                <div class="olms-chat-meta">
+                    {{ msg.sender.username }} • {{ msg.created_at|date:"Y-m-d H:i" }}
+                </div>
+                <div class="olms-chat-bubble {% if msg.sender == user %}olms-chat-bubble-me{% else %}olms-chat-bubble-other{% endif %}">
+                    {{ msg.text|linebreaksbr }}
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted mb-0">No messages yet. Start the conversation.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card olms-chat-input-card">
+    <div class="olms-chat-input-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-2 olms-chat-textarea">
+                {{ form.text }}
+                {{ form.text.errors }}
+            </div>
+            <button type="submit" class="btn btn-primary olms-chat-send-btn">Send</button>
+            <a href="{% url 'messaging:inbox' %}" class="btn btn-secondary ms-2 olms-chat-back-btn">Back to Inbox</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

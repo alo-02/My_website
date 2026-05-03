@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<style>
+    .olms-inbox-header {
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .olms-inbox-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .olms-inbox-subtitle {
+        font-size: 0.88rem;
+        color: #6b7280;
+    }
+
+    .olms-inbox-list {
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+        overflow: hidden;
+    }
+
+    .olms-inbox-item {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 10px 14px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.12s ease, transform 0.08s ease;
+    }
+
+    .olms-inbox-item:last-child {
+        border-bottom: none;
+    }
+
+    .olms-inbox-item:hover {
+        background-color: #f3f4ff;
+        transform: translateY(-1px);
+    }
+
+    .olms-inbox-course {
+        font-weight: 600;
+        font-size: 0.96rem;
+    }
+
+    .olms-inbox-with {
+        font-size: 0.83rem;
+        color: #6b7280;
+    }
+
+    .olms-inbox-pill {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #4f46e5;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .olms-inbox-empty {
+        font-size: 0.96rem;
+        color: #6b7280;
+        margin-top: 16px;
+    }
+</style>
+
+<div class="olms-inbox-header">
+    <div>
+        <div class="olms-inbox-title">Inbox</div>
+        <div class="olms-inbox-subtitle">
+            View your course conversations with students or instructors.
+        </div>
+    </div>
+</div>
+
+<div class="olms-inbox-list">
+    {% for conv in conversations %}
+
+        {% if user.is_teacher %}
+            {% with other=conv.student %}
+                <a href="{% url 'messaging:conversation_detail' conv.course.pk other.pk %}" class="olms-inbox-item">
+                    <div>
+                        <div class="olms-inbox-course">{{ conv.course.title }}</div>
+                        <div class="olms-inbox-with">With: {{ other.username }}</div>
+                    </div>
+
+                    <div class="text-end">
+                        {% if conv.unread_count %}
+                            <span class="badge bg-danger rounded-pill">{{ conv.unread_count }}</span>
+                        {% endif %}
+                        <div class="mt-1">
+                            <span class="olms-inbox-pill">Student</span>
+                        </div>
+                    </div>
+                </a>
+            {% endwith %}
+        {% else %}
+            {% with other=conv.teacher %}
+                <a href="{% url 'messaging:conversation_detail' conv.course.pk other.pk %}" class="olms-inbox-item">
+                    <div>
+                        <div class="olms-inbox-course">{{ conv.course.title }}</div>
+                        <div class="olms-inbox-with">With: {{ other.username }}</div>
+                    </div>
+
+                    <div class="text-end">
+                        {% if conv.unread_count %}
+                            <span class="badge bg-danger rounded-pill">{{ conv.unread_count }}</span>
+                        {% endif %}
+                        <div class="mt-1">
+                            <span class="olms-inbox-pill">Teacher</span>
+                        </div>
+                    </div>
+                </a>
+            {% endwith %}
+        {% endif %}
+
+    {% empty %}
+        <p class="olms-inbox-empty px-2 py-3 text-center mb-0">
+            No conversations yet.
+        </p>
+    {% endfor %}
+</div>
+{% endblock %}

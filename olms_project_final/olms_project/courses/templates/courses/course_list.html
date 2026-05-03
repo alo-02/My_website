@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<style>
+    .olms-course-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 12px;
+    }
+
+    .olms-course-list-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .olms-course-list-subtitle {
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+
+    .olms-course-filters {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 10px 12px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+        margin-bottom: 16px;
+    }
+
+    .olms-course-filters input,
+    .olms-course-filters select {
+        border-radius: 10px;
+        border-color: #d1d5db;
+        font-size: 0.9rem;
+        padding: 8px 10px;
+        background-color: #f9fafb;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .olms-course-filters input:focus,
+    .olms-course-filters select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        background-color: #ffffff;
+        outline: none;
+    }
+
+    .olms-course-filters button {
+        border-radius: 999px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 10px;
+    }
+
+    .olms-course-card {
+        border-radius: 16px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+        background: linear-gradient(180deg, #eef2ff, #f9fafb);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .olms-course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+    }
+
+    .olms-course-card-body {
+        padding: 14px 16px 16px;
+    }
+
+    .olms-course-card-title {
+        font-size: 1.02rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .olms-course-card-meta {
+        font-size: 0.82rem;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .olms-course-card-desc {
+        font-size: 0.9rem;
+        color: #4b5563;
+    }
+
+    .olms-course-card-price {
+        font-weight: 600;
+        font-size: 0.93rem;
+        margin-top: 8px;
+    }
+
+    .olms-course-card-btn {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 7px 12px;
+    }
+
+    .olms-course-empty {
+        font-size: 0.96rem;
+        color: #6b7280;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .olms-pagination .page-link {
+        border-radius: 999px !important;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="olms-course-list-header">
+    <div>
+        <div class="olms-course-list-title">All Courses</div>
+        <div class="olms-course-list-subtitle">
+            Browse available courses, filter by category, and open details to enroll.
+        </div>
+    </div>
+</div>
+
+<form method="get" class="row g-2 olms-course-filters">
+    <div class="col-md-4 col-sm-6">
+        <input type="text" name="q" value="{{ query }}" class="form-control"
+               placeholder="Search by course or teacher">
+    </div>
+    <div class="col-md-3 col-sm-4">
+        <select name="category" class="form-select">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}"
+                        {% if selected_category|stringformat:"s" == cat.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+                    {{ cat.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2 col-sm-2">
+        <button class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+<div class="row">
+    {% for course in page_obj %}
+    <div class="col-md-4 mb-3">
+        <div class="olms-course-card h-100">
+            <div class="olms-course-card-body d-flex flex-column">
+                <h5 class="olms-course-card-title">{{ course.title }}</h5>
+                <p class="olms-course-card-meta">
+                    {{ course.category }} • {{ course.teacher.username }}
+                </p>
+                <p class="olms-course-card-desc flex-grow-1">
+                    {{ course.description|truncatechars:100 }}
+                </p>
+                <p class="olms-course-card-price">
+                    Price: {{ course.price }} BDT
+                </p>
+                <a href="{% url 'courses:course_detail' course.pk %}"
+                   class="btn btn-primary mt-2 olms-course-card-btn align-self-start">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="olms-course-empty">No courses found. Try changing your filters.</p>
+    {% endfor %}
+</div>
+
+<nav class="mt-3 olms-pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ selected_category }}">Previous</a>
+            </li>
+        {% endif %}
+        <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ selected_category }}">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}

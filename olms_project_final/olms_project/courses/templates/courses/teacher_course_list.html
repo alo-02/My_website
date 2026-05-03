@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<style>
+    .olms-teacher-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .olms-teacher-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .olms-teacher-subtitle {
+        font-size: 0.88rem;
+        color: #6b7280;
+    }
+
+    .olms-teacher-create-btn {
+        border-radius: 999px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 14px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .olms-teacher-course-card {
+        border-radius: 16px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+        background: linear-gradient(180deg, #eef2ff, #f9fafb);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .olms-teacher-course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 44px rgba(15, 23, 42, 0.24);
+    }
+
+    .olms-teacher-course-body {
+        padding: 14px 16px 16px;
+    }
+
+    .olms-teacher-course-title {
+        font-size: 1.02rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .olms-teacher-course-category {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .olms-teacher-course-desc {
+        font-size: 0.9rem;
+        color: #4b5563;
+    }
+
+    .olms-teacher-course-price {
+        font-weight: 600;
+        font-size: 0.93rem;
+        margin-top: 8px;
+    }
+
+    .olms-teacher-course-btn {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 7px 12px;
+    }
+
+    .olms-teacher-empty {
+        font-size: 0.96rem;
+        color: #6b7280;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="olms-teacher-header">
+    <div>
+        <div class="olms-teacher-title">My Courses</div>
+        <div class="olms-teacher-subtitle">
+            Manage all the courses you have created and keep their content up to date.
+        </div>
+    </div>
+    <a href="{% url 'courses:course_create' %}" class="btn olms-teacher-create-btn">
+        Create New Course
+    </a>
+</div>
+
+<div class="row">
+    {% for course in courses %}
+    <div class="col-md-4 mb-3">
+        <div class="olms-teacher-course-card h-100">
+            <div class="olms-teacher-course-body d-flex flex-column">
+                <h5 class="olms-teacher-course-title">{{ course.title }}</h5>
+                <p class="olms-teacher-course-category">{{ course.category }}</p>
+                <p class="olms-teacher-course-desc flex-grow-1">
+                    {{ course.description|truncatechars:100 }}
+                </p>
+                <p class="olms-teacher-course-price">
+                    Price: {{ course.price }} BDT
+                </p>
+                <a href="{% url 'courses:course_detail' course.pk %}"
+                   class="btn btn-outline-primary btn-sm mt-2 olms-teacher-course-btn align-self-start">
+                    View
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="olms-teacher-empty">You have no courses yet. Click “Create New Course” to get started.</p>
+    {% endfor %}
+</div>
+{% endblock %}

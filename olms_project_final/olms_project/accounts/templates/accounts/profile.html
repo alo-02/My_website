@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+    .olms-profile-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-profile-card {
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+        background: linear-gradient(180deg, #eef2ff, #f9fafb);
+    }
+
+    .olms-profile-header {
+        padding: 24px 22px 18px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        color: #fff;
+        position: relative;
+    }
+
+    .olms-profile-header::after {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 250, 252, 0.4);
+        right: -30px;
+        top: -50px;
+        opacity: 0.8;
+    }
+
+    .olms-profile-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        border: 3px solid rgba(248, 250, 252, 0.85);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+        object-fit: cover;
+    }
+
+    .olms-profile-initials {
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        border: 3px solid rgba(248, 250, 252, 0.85);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+        background: rgba(15, 23, 42, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.1rem;
+        font-weight: 600;
+        color: #f9fafb;
+        text-transform: uppercase;
+    }
+
+    .olms-profile-name {
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .olms-profile-role-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        background: rgba(15, 23, 42, 0.18);
+        backdrop-filter: blur(6px);
+        margin-top: 4px;
+    }
+
+    .olms-profile-role-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+    }
+
+    .olms-profile-body {
+        padding: 18px 22px 20px;
+    }
+
+    .olms-profile-info-label {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        color: #9ca3af;
+        margin-bottom: 2px;
+    }
+
+    .olms-profile-info-value {
+        font-size: 0.96rem;
+        color: #111827;
+        font-weight: 500;
+    }
+
+    .olms-profile-info-row {
+        padding: 8px 0;
+        border-bottom: 1px dashed #e5e7eb;
+    }
+
+    .olms-profile-info-row:last-child {
+        border-bottom: none;
+    }
+
+    .olms-profile-edit-btn {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        padding: 9px 12px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .olms-profile-edit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+    }
+
+    @media (max-width: 576px) {
+        .olms-profile-body {
+            padding: 16px 16px 18px;
+        }
+    }
+</style>
+
+<div class="olms-profile-wrapper">
+    <div class="col-md-6 col-sm-10">
+        <div class="card olms-profile-card">
+            <div class="olms-profile-header">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        {% if user.profile_photo %}
+                            <img src="{{ user.profile_photo.url }}" alt="Profile photo" class="olms-profile-avatar">
+                        {% else %}
+                            <div class="olms-profile-initials">
+                                {{ user.username|slice:":1" }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="olms-profile-name">
+                            {{ user.username }}
+                        </div>
+                        <div class="olms-profile-role-pill mt-1">
+                            <span class="olms-profile-role-dot"></span>
+                            <span>{{ user.get_role_display }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="olms-profile-body">
+                <div class="olms-profile-info-row">
+                    <div class="olms-profile-info-label">Email</div>
+                    <div class="olms-profile-info-value">{{ user.email|default:"—" }}</div>
+                </div>
+                <div class="olms-profile-info-row">
+                    <div class="olms-profile-info-label">Phone</div>
+                    <div class="olms-profile-info-value">{{ user.phone|default:"—" }}</div>
+                </div>
+                <div class="olms-profile-info-row">
+                    <div class="olms-profile-info-label">Gender</div>
+                    <div class="olms-profile-info-value">{{ user.gender|default:"—" }}</div>
+                </div>
+                <div class="olms-profile-info-row">
+                    <div class="olms-profile-info-label">Qualification</div>
+                    <div class="olms-profile-info-value">{{ user.qualification|default:"—" }}</div>
+                </div>
+                <div class="olms-profile-info-row">
+                    <div class="olms-profile-info-label">Expertise</div>
+                    <div class="olms-profile-info-value">{{ user.expertise|default:"—" }}</div>
+                </div>
+
+                <div class="mt-3 text-end">
+                    <a href="{% url 'accounts:profile_edit' %}" class="btn olms-profile-edit-btn">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

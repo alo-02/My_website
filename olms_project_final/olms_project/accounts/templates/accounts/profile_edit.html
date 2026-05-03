@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<style>
+    .olms-profile-edit-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-profile-card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+        overflow: hidden;
+    }
+
+    .olms-profile-header {
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        color: #fff;
+        padding: 18px 20px;
+        position: relative;
+    }
+
+    .olms-profile-header::after {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 250, 252, 0.4);
+        right: -30px;
+        top: -50px;
+        opacity: 0.8;
+    }
+
+    .olms-profile-header h5 {
+        margin-bottom: 0;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+
+    .olms-profile-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-top: 4px;
+    }
+
+    .olms-profile-body {
+        padding: 20px 22px 22px;
+        background: linear-gradient(180deg, #f9fafb, #eef2ff);
+    }
+
+    .olms-profile-form-label {
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: #4b5563;
+        margin-bottom: 4px;
+    }
+
+    .olms-profile-body input[type="text"],
+    .olms-profile-body input[type="email"],
+    .olms-profile-body input[type="file"],
+    .olms-profile-body input[type="password"],
+    .olms-profile-body select,
+    .olms-profile-body textarea {
+        border-radius: 10px;
+        border-color: #d1d5db;
+        font-size: 0.9rem;
+        padding: 9px 11px;
+        background-color: rgba(255, 255, 255, 0.98);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .olms-profile-body input:focus,
+    .olms-profile-body select:focus,
+    .olms-profile-body textarea:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.23);
+        background-color: #ffffff;
+        outline: none;
+    }
+
+    .olms-profile-error {
+        font-size: 0.8rem;
+        color: #b91c1c;
+    }
+
+    .olms-profile-save-btn {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        padding: 9px 12px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .olms-profile-save-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+    }
+
+    @media (max-width: 576px) {
+        .olms-profile-body {
+            padding: 18px 16px 18px;
+        }
+    }
+</style>
+
+<div class="olms-profile-edit-wrapper">
+    <div class="col-md-6 col-sm-10">
+        <div class="card olms-profile-card">
+            <div class="olms-profile-header">
+                <h5>Edit Profile</h5>
+                <div class="olms-profile-subtitle">
+                    Update your information to keep your OLMS account up to date.
+                </div>
+            </div>
+            <div class="olms-profile-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="olms-profile-form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="olms-profile-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn olms-profile-save-btn w-100">
+                        Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

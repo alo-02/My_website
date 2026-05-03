@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Delete Course{% endblock %}
+
+{% block content %}
+<style>
+    .olms-delete-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-delete-card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .olms-delete-header {
+        background: linear-gradient(135deg, #b91c1c, #f97316);
+        color: #fef2f2;
+        padding: 18px 20px;
+        position: relative;
+    }
+
+    .olms-delete-header::after {
+        content: "";
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 999px;
+        border: 1px solid rgba(254, 242, 242, 0.6);
+        right: -35px;
+        top: -55px;
+        opacity: 0.8;
+    }
+
+    .olms-delete-header h5 {
+        margin-bottom: 4px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.86rem;
+    }
+
+    .olms-delete-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+
+    .olms-delete-body {
+        padding: 20px 22px 22px;
+        background: linear-gradient(180deg, #fef2f2, #f9fafb);
+    }
+
+    .olms-delete-warning {
+        border-left: 4px solid #dc2626;
+        padding-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .olms-delete-warning strong {
+        color: #991b1b;
+    }
+
+    .olms-delete-description {
+        font-size: 0.86rem;
+        color: #4b5563;
+    }
+
+    .olms-delete-actions .btn-danger {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        padding: 8px 14px;
+        box-shadow: 0 10px 20px rgba(220, 38, 38, 0.4);
+        border: none;
+    }
+
+    .olms-delete-actions .btn-secondary {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 8px 14px;
+    }
+</style>
+
+<div class="olms-delete-wrapper">
+    <div class="col-md-6 col-sm-10">
+        <div class="card olms-delete-card mt-3 mt-md-0">
+            <div class="olms-delete-header">
+                <h5>Confirm Course Deletion</h5>
+                <div class="olms-delete-subtitle">
+                    This action cannot be undone. Please review carefully before proceeding.
+                </div>
+            </div>
+            <div class="olms-delete-body">
+                <div class="olms-delete-warning">
+                    <p class="mb-1">
+                        You are about to delete the course
+                        <strong>"{{ course.title }}"</strong>.
+                    </p>
+                </div>
+                <p class="olms-delete-description mb-3">
+                    Deleting this course will remove it and all associated materials from student view.
+                    Any enrolled students will no longer be able to access its content.
+                </p>
+                <form method="post" class="olms-delete-actions d-flex align-items-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        Yes, delete
+                    </button>
+                    <a href="{% url 'courses:teacher_course_list' %}" class="btn btn-secondary ms-2">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<style>
+    .olms-register-wrapper {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-register-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .olms-register-left {
+        background: radial-gradient(circle at top left, #4f46e5, #0ea5e9);
+        color: #f9fafb;
+        padding: 26px 22px;
+        position: relative;
+    }
+
+    .olms-register-left::after {
+        content: "";
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 250, 252, 0.4);
+        right: -40px;
+        top: -60px;
+        opacity: 0.8;
+    }
+
+    .olms-register-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        margin-bottom: 6px;
+    }
+
+    .olms-register-subtitle {
+        font-size: 0.86rem;
+        opacity: 0.9;
+        margin-bottom: 16px;
+    }
+
+    .olms-register-bullets {
+        font-size: 0.86rem;
+        opacity: 0.9;
+    }
+
+    .olms-register-bullets li {
+        margin-bottom: 6px;
+    }
+
+    .olms-register-right {
+        padding: 22px 22px 20px;
+        background: linear-gradient(180deg, #f9fafb, #eef2ff);
+    }
+
+    .olms-register-form-label {
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: #4b5563;
+        margin-bottom: 4px;
+    }
+
+    .olms-register-right input[type="text"],
+    .olms-register-right input[type="email"],
+    .olms-register-right input[type="password"],
+    .olms-register-right input[type="file"],
+    .olms-register-right select,
+    .olms-register-right textarea {
+        border-radius: 10px;
+        border-color: #d1d5db;
+        font-size: 0.9rem;
+        padding: 9px 11px;
+        background-color: rgba(255, 255, 255, 0.98);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .olms-register-right input:focus,
+    .olms-register-right select:focus,
+    .olms-register-right textarea:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.23);
+        background-color: #ffffff;
+        outline: none;
+    }
+
+    .olms-register-help {
+        font-size: 0.78rem;
+        color: #6b7280;
+    }
+
+    .olms-register-error {
+        font-size: 0.8rem;
+        color: #b91c1c;
+    }
+
+    .olms-register-btn {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        padding: 9px 12px;
+        background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .olms-register-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+    }
+
+    .olms-register-footer {
+        font-size: 0.86rem;
+        color: #6b7280;
+    }
+
+    .olms-register-footer a {
+        font-weight: 500;
+        color: #4f46e5;
+        text-decoration: none;
+    }
+
+    .olms-register-footer a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .olms-register-left {
+            display: none;
+        }
+        .olms-register-right {
+            padding: 20px 16px 18px;
+        }
+    }
+</style>
+
+<div class="olms-register-wrapper">
+    <div class="col-md-8 col-sm-11">
+        <div class="row g-0 olms-register-card">
+            <div class="col-md-4 d-none d-md-block">
+                <div class="olms-register-left h-100">
+                    <div class="olms-register-title">Create your OLMS account</div>
+                    <div class="olms-register-subtitle">
+                        Join as a student or teacher and start your learning journey.
+                    </div>
+                    <ul class="olms-register-bullets list-unstyled">
+                        <li>• Browse and enroll in online courses.</li>
+                        <li>• Access videos and PDF materials anytime.</li>
+                        <li>• Chat with instructors for clarification.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-8 col-12">
+                <div class="olms-register-right">
+                    <h5 class="mb-3 fw-semibold">Create Account</h5>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="olms-register-form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="olms-register-help">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="olms-register-error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn olms-register-btn w-100">Register</button>
+                    </form>
+                    <p class="mt-3 text-center olms-register-footer">
+                        Already have an account?
+                        <a href="{% url 'accounts:login' %}">Login here</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

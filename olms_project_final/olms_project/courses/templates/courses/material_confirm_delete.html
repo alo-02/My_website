@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Delete Material{% endblock %}
+
+{% block content %}
+<style>
+    .olms-delete-material-wrapper {
+        min-height: calc(100vh - 140px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .olms-delete-material-card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .olms-delete-material-header {
+        background: linear-gradient(135deg, #b91c1c, #f97316);
+        color: #fef2f2;
+        padding: 16px 20px;
+        position: relative;
+    }
+
+    .olms-delete-material-header::after {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        border: 1px solid rgba(254, 242, 242, 0.5);
+        right: -30px;
+        top: -50px;
+        opacity: 0.8;
+    }
+
+    .olms-delete-material-header h5 {
+        margin-bottom: 4px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.86rem;
+    }
+
+    .olms-delete-material-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+
+    .olms-delete-material-body {
+        padding: 20px 22px 22px;
+        background: linear-gradient(180deg, #fef2f2, #f9fafb);
+    }
+
+    .olms-delete-material-warning {
+        border-left: 4px solid #dc2626;
+        padding-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .olms-delete-material-warning strong {
+        color: #991b1b;
+    }
+
+    .olms-delete-material-desc {
+        font-size: 0.86rem;
+        color: #4b5563;
+        margin-bottom: 14px;
+    }
+
+    .olms-delete-material-actions .btn-danger {
+        border-radius: 999px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        padding: 8px 14px;
+        box-shadow: 0 10px 20px rgba(220, 38, 38, 0.4);
+        border: none;
+    }
+
+    .olms-delete-material-actions .btn-secondary {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        padding: 8px 14px;
+    }
+</style>
+
+<div class="olms-delete-material-wrapper">
+    <div class="col-md-6 col-sm-10">
+        <div class="card olms-delete-material-card">
+            <div class="olms-delete-material-header">
+                <h5>Delete Material</h5>
+                <div class="olms-delete-material-subtitle">
+                    This will remove the selected material from the course.
+                </div>
+            </div>
+            <div class="olms-delete-material-body">
+                <div class="olms-delete-material-warning">
+                    <p class="mb-1">
+                        Are you sure you want to delete the material
+                        <strong>"{{ material.title }}"</strong>?
+                    </p>
+                </div>
+                <p class="olms-delete-material-desc">
+                    Students will no longer be able to access this specific file or video link under
+                    <strong>{{ material.course.title }}</strong>.
+                </p>
+                <form method="post" class="olms-delete-material-actions d-flex align-items-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, delete</button>
+                    <a href="{% url 'courses:course_detail' material.course.pk %}"
+                       class="btn btn-secondary ms-2">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
