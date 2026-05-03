@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Card Payment";
+}
+
+<h2>Card Payment</h2>
+
+<form asp-action="Bill" method="post">
+    <div>
+        <label for="CardNumber">Card Number:</label>
+        <input type="text" id="CardNumber" name="CardNumber" required />
+    </div>
+    <div>
+        <label for="CardHolder">Cardholder Name:</label>
+        <input type="text" id="CardHolder" name="CardHolder" required />
+    </div>
+    <div>
+        <label for="Expiry">Expiry Date:</label>
+        <input type="month" id="Expiry" name="Expiry" required />
+    </div>
+    <div>
+        <label for="CVC">CVC:</label>
+        <input type="text" id="CVC" name="CVC" required />
+    </div>
+    <button type="submit">Pay Now</button>
+</form>

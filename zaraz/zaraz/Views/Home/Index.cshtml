@@ -1,0 +1,140 @@
+﻿@model List<zaraz.Models.Product>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Header Section -->
+<header class="bg-primary text-white text-center py-3">
+    <div class="container">
+        <h1 class="display-4 fw-bold">ZARAZ STORE</h1>
+        <p class="lead">Your favorite online store for the best deals, fast delivery, and top brands!</p>
+        <a href="#cart" class="btn btn-light btn-lg">Go to Cart</a>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<div class="hero-section p-5 mb-4 bg-light rounded-3">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Welcome to ZARAZ!</h1>
+        <p class="lead">Discover top deals, popular brands, and fast delivery on thousands of items.</p>
+        <a href="#products" class="btn btn-primary btn-lg">Shop Now</a>
+    </div>
+</div>
+
+<!-- Featured Products Section -->
+<h2 id="products" class="mb-4 text-center">Featured Products</h2>
+<div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var item in Model.Take(15))
+        {
+            <div class="col">
+                <div class="card h-100 shadow-lg">
+                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Description</p>
+                        <p class="fw-bold text-primary">$@item.Price</p>
+                        <form asp-controller="Home" asp-action="AddToCart" method="post">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-outline-primary w-100">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Newsletter Signup Section -->
+<div class="newsletter-section mt-5 p-5 bg-primary text-white rounded text-center">
+    <h4>Subscribe to Our Newsletter</h4>
+    <p>Stay updated with the latest deals, discounts, and special offers!</p>
+    <form class="row g-2 justify-content-center">
+        <div class="col-auto">
+            <input type="email" class="form-control" placeholder="Enter your email" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-light">Subscribe</button>
+        </div>
+    </form>
+</div>
+
+<!-- Built-in CSS for Styling -->
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: #f4f4f9;
+        color: #333;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    /* Header Section */
+    header {
+        background-color: #007bff;
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+    }
+    header h1 {
+        font-size: 3rem;
+    }
+
+    /* Featured Products */
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+        max-height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .card-body p {
+        margin-bottom: 10px;
+    }
+
+    /* Button Styling */
+    .btn-outline-primary {
+        font-size: 1rem;
+        border-radius: 30px;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+        background-color: #007bff;
+        color: white;
+        padding: 40px 20px;
+    }
+
+    .newsletter-section h4 {
+        font-size: 1.8rem;
+    }
+
+    .newsletter-section .form-control {
+        padding: 10px;
+        max-width: 300px;
+    }
+</style>
