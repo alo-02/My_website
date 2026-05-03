@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Checkout";
+    var selectedPaymentMethod = ViewData["SelectedPaymentMethod"] as string; // Get the selected payment method from the controller
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">🧾 Checkout</h2>
+
+    <form method="post" asp-action="Checkout" asp-controller="Home">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="Phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="Phone" name="Phone" required pattern="[0-9]{11}" placeholder="01XXXXXXXXX" />
+            <small class="text-muted">Format: 01XXXXXXXXX</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="Address" class="form-label">Shipping Address</label>
+            <textarea class="form-control" id="Address" name="Address" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Payment Method</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="PaymentMethod" value="Bkash" id="Bkash" 
+                       @(selectedPaymentMethod == "Bkash" ? "checked" : "") required />
+                <label class="form-check-label" for="Bkash">
+                    <img src="/images/bkash.jpg" alt="Bkash" width="30" /> Bkash
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="PaymentMethod" value="Card" id="Card"
+                       @(selectedPaymentMethod == "Card" ? "checked" : "") />
+                <label class="form-check-label" for="Card">
+                    <img src="/images/card.png" alt="Card" width="30" /> Card (Debit/Credit)
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="PaymentMethod" value="Cash" id="Cash"
+                       @(selectedPaymentMethod == "Cash" ? "checked" : "") />
+                <label class="form-check-label" for="Cash">
+                    <img src="/images/cod.png" alt="Cash on Delivery" width="30" /> Cash on Delivery
+                </label>
+            </div>
+        </div>
+
+        @if (selectedPaymentMethod == "Bkash")
+        {
+            <div class="mb-3">
+                <label for="BkashNumber" class="form-label">Bkash Number</label>
+                <input type="text" class="form-control" id="BkashNumber" name="BkashNumber" placeholder="01XXXXXXXXX" />
+            </div>
+        }
+        else if (selectedPaymentMethod == "Card")
+        {
+            <div class="mb-3">
+                <label for="CardNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="CardNumber" name="CardNumber" placeholder="XXXX-XXXX-XXXX-XXXX" />
+            </div>
+            <div class="mb-3">
+                <label for="ExpiryDate" class="form-label">Expiry Date</label>
+                <input type="text" class="form-control" id="ExpiryDate" name="ExpiryDate" placeholder="MM/YY" />
+            </div>
+            <div class="mb-3">
+                <label for="CVV" class="form-label">CVV</label>
+                <input type="text" class="form-control" id="CVV" name="CVV" placeholder="XXX" />
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success w-100">Submit Order</button>
+    </form>
+</div>
